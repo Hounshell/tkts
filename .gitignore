@@ -65,4 +65,5 @@ target/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+*.swp
 

@@ -5,15 +5,15 @@ package(default_visibility = ["//visibility:public"])
 
 py_test(
     name = "lint",
-    srcs = ["//python/tools:run_pylint.py"],
+    srcs = [":run_pylint.py"],
     main = "run_pylint.py",
     args = [
         "$(locations //python/src:src_files)",
-        "--rcfile=$(location //python:.pylintrc)",
+        "--rcfile=$(location :.pylintrc)",
     ],
     data = [
         "//python/src:src_files",
-        "//python:.pylintrc",
+        ":.pylintrc",
     ],
     deps = [
         requirement("pylint"),
