@@ -1,0 +1,9 @@
+# Print output for failed tests directly to the terminal
+test --test_output=errors
+
+# Print a detailed summary of test outcomes
+test --test_summary=detailed
+
+# Show colored terminal output
+test --color=yes
+

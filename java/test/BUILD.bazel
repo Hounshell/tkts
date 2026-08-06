@@ -1,0 +1,36 @@
+load("@rules_java//java:defs.bzl", "java_test")
+
+package(default_visibility = ["//visibility:public"])
+
+java_test(
+    name = "CalculatorTest",
+    srcs = ["hounshell/tkts/CalculatorTest.java"],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    args = ["--select-class=hounshell.tkts.CalculatorTest"],
+    use_testrunner = False,
+    deps = [
+        "//java/src",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_junit_jupiter_junit_jupiter_engine",
+        "@maven//:org_junit_platform_junit_platform_console",
+        "@maven//:org_junit_platform_junit_platform_launcher",
+    ],
+)
+
+java_test(
+    name = "checkstyle",
+    main_class = "com.puppycrawl.tools.checkstyle.Main",
+    args = [
+        "-c",
+        "$(location :checkstyle.xml)",
+        "$(locations //java/src:src_files)",
+    ],
+    data = [
+        ":checkstyle.xml",
+        "//java/src:src_files",
+    ],
+    runtime_deps = [
+        "@maven//:com_puppycrawl_tools_checkstyle",
+    ],
+)
+

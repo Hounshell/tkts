@@ -1,0 +1,18 @@
+# rust/src/BUILD.bazel
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+
+package(default_visibility = ["//visibility:public"])
+
+# Filegroup for linting across rust/src/
+filegroup(
+    name = "src_files",
+    srcs = glob(["**/*.rs"]),
+)
+
+rust_library(
+    name = "src",
+    crate_name = "calculator",
+    srcs = [":src_files"],
+    edition = "2021",
+)
+

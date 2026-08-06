@@ -1,0 +1,32 @@
+load("@rules_python//python:py_test.bzl", "py_test")
+load("@pip//:requirements.bzl", "requirement")
+
+package(default_visibility = ["//visibility:public"])
+
+py_test(
+    name = "calculator_test",
+    srcs = ["calculator_test.py"],
+    deps = [
+        "//python/src",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "lint",
+    srcs = ["//python/tools:run_pylint.py"],
+    main = "run_pylint.py",
+    args = ["$(locations //python/src:src_files)"],
+    data = ["//python/src:src_files"],
+    deps = [
+        requirement("pylint"),
+        requirement("astroid"),
+        requirement("dill"),
+        requirement("isort"),
+        requirement("mccabe"),
+        requirement("platformdirs"),
+        requirement("tomlkit"),
+        requirement("typing-extensions"),
+    ],
+)
+

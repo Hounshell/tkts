@@ -1,0 +1,19 @@
+bazel_dep(name = "rules_java", version = "7.6.5")
+bazel_dep(name = "rules_jvm_external", version = "6.0")
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        "org.junit.jupiter:junit-jupiter-api:5.10.2",
+        "org.junit.jupiter:junit-jupiter-engine:5.10.2",
+        "org.junit.platform:junit-platform-launcher:1.10.2",
+        "org.junit.platform:junit-platform-console:1.10.2",
+    ],
+)
+maven.install(
+    artifacts = [
+        "com.puppycrawl.tools:checkstyle:10.15.0",
+    ],
+)
+use_repo(maven, "maven")
+

@@ -1,0 +1,16 @@
+load("@rules_rust//rust:defs.bzl", "rust_clippy", "rust_test")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_test(
+    name = "calculator_test",
+    srcs = ["calculator_test.rs"],
+    edition = "2021",
+    deps = ["//rust/src"],
+)
+
+rust_clippy(
+    name = "lint",
+    deps = ["//rust/src"],
+)
+

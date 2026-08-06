@@ -1,0 +1,9 @@
+module(
+    name = "tkts",
+    version = "0.1.0",
+)
+
+include("//java:toolchains.MODULE.bazel")
+include("//python:toolchains.MODULE.bazel")
+include("//rust:toolchains.MODULE.bazel")
+

@@ -1,0 +1,23 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["**/*.py"]))
+
+filegroup(
+    name = "src_files",
+    srcs = glob(["**/*.py"]),
+)
+
+py_library(
+    name = "src",
+    srcs = [":src_files"],
+)
+
+py_binary(
+    name = "app",
+    srcs = [":src_files"],
+    main = "calculator.py",
+    deps = [":src"],
+)
+
