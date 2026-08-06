@@ -1,0 +1,7 @@
+[FORMAT]
+indent-string='  '
+
+[MESSAGES CONTROL]
+enable=missing-final-newline
+disable=trailing-newlines
+

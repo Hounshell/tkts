@@ -12,12 +12,6 @@ filegroup(
 py_library(
     name = "src",
     srcs = [":src_files"],
-)
-
-py_binary(
-    name = "app",
-    srcs = [":src_files"],
-    main = "calculator.py",
-    deps = [":src"],
+    imports = ["."],
 )
 
