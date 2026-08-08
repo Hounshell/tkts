@@ -1,6 +1,7 @@
 # Primary dependencies
 pylint==3.1.0
 pytest==8.0.0
+mypy==1.8.0
 
 # Transitive dependencies
 iniconfig==2.0.0
@@ -14,3 +15,5 @@ mccabe==0.7.0
 platformdirs==4.2.0
 tomlkit==0.12.4
 typing-extensions==4.10.0
+mypy-extensions==1.0.0
+typing-extensions==4.9.0

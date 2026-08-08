@@ -7,17 +7,19 @@ from typing import TypeVar, Generic
 
 
 # Type hint types.
-V = TypeVar('V')
-STORAGE = tuple[str, None] | tuple[None, int] | tuple[str, int]
+_V = TypeVar('_V')
+_SingleT = TypeVar('_SingleT')
+_FinalT = TypeVar('_FinalT')
+_Storage = tuple[str, None] | tuple[None, int] | tuple[str, int]
 
 
-class Fact(ABC, Generic[V]):
+class Fact(ABC, Generic[_SingleT, _FinalT]):
   """Information about a fact field on a ticket."""
 
   def __init__(
         self,
         name: str,
-        code_name: str = None):
+        code_name: str | None = None):
     self._name = name
     self._code_name = code_name or name.lower()
 
@@ -33,37 +35,38 @@ class Fact(ABC, Generic[V]):
     return self._code_name
 
   @abstractmethod
-  def convert_single_value_to_storage(self, value: V) -> STORAGE:
+  def convert_single_value_to_storage(self, value: _SingleT) -> _Storage:
     """Converts a value for storage as a tuple of string and integer."""
 
   @abstractmethod
-  def convert_single_value_from_storage(self, value: STORAGE) -> V:
+  def convert_single_value_from_storage(self, value: _Storage) -> _SingleT:
     """Converts a value from a tuple of string and integer, from storage."""
 
 
-class RepeatedFact(Fact[list[V]], Generic[V]):
+class RepeatedFact(Fact[_V, list[_V]], Generic[_V]):
   """Fact that stores repeated values."""
 
-  def convert_multiple_values_to_storage(self, values: list[V]) -> list[STORAGE]:
+  def convert_multiple_values_to_storage(self, values: list[_V]) -> list[_Storage]:
     """Converts a list of values for storage."""
     return [self.convert_single_value_to_storage(v) for v in values]
 
-  def convert_multiple_values_from_storage(self, values: list[STORAGE]) -> list[V]:
+  def convert_multiple_values_from_storage(self, values: list[_Storage]) -> list[_V]:
     """Converts a list of values from storage."""
     return [self.convert_single_value_from_storage(v) for v in values]
 
 
 class _StringFactMixin:
-  def convert_single_value_to_storage(self, value: V) -> STORAGE:
+  def convert_single_value_to_storage(self, value: str) -> _Storage:
     """Mixin that overrides method in Fact."""
     return (value, None)
 
-  def convert_single_value_from_storage(self, value: STORAGE) -> V:
+  def convert_single_value_from_storage(self, value: _Storage) -> str:
     """Mixin that overrides method in Fact."""
+    assert value[0] is not None
     return value[0]
 
 
-class StringFact(_StringFactMixin, Fact[str]):
+class StringFact(_StringFactMixin, Fact[str, str]):
   """Fact that stores a single string value."""
 
 
@@ -72,16 +75,17 @@ class RepeatedStringFact(_StringFactMixin, RepeatedFact[str]):
 
 
 class _IntegerFactMixin:
-  def convert_single_value_to_storage(self, value: V) -> STORAGE:
+  def convert_single_value_to_storage(self, value: int) -> _Storage:
     """Mixin that overrides method in Fact."""
     return (None, value)
 
-  def convert_single_value_from_storage(self, value: STORAGE) -> V:
+  def convert_single_value_from_storage(self, value: _Storage) -> int:
     """Mixin that overrides method in Fact."""
+    assert value[1] is not None
     return value[1]
 
 
-class IntegerFact(_IntegerFactMixin, Fact[int]):
+class IntegerFact(_IntegerFactMixin, Fact[int, int]):
   """Fact that stores a single integer value."""
 
 

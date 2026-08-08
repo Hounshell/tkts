@@ -2068,7 +2068,7 @@
         "bzlTransitiveDigest": "xR48WK8z0ARnBuaXuOuCr/kP+yBDq01/TLYPkSZeKGg=",
         "usagesDigest": "4cyazWe4k6+nXOuwEZenw9SAJ+AyHBUwZamPo+cCHzg=",
         "recordedFileInputs": {
-          "@@//python/requirements.txt": "bb25b5e54171533678e9881fa08f02a5a2e42e2a65e5b72eba34519e78074bc9"
+          "@@//python/requirements.txt": "55773f9a0df0fa2be7e0ddebf3a9e7ec7fdd1e99b9d13e68129de7caaaf9d263"
         },
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -2182,6 +2182,54 @@
             "ruleClassName": "whl_library",
             "attributes": {
               "requirement": "mccabe==0.7.0",
+              "repo": "pip_311",
+              "repo_prefix": "pip_311_",
+              "whl_patches": {},
+              "experimental_target_platforms": [],
+              "python_interpreter": "",
+              "python_interpreter_target": "@@rules_python~~python~python_3_11_host//:python",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {},
+              "envsubst": [],
+              "group_name": "",
+              "group_deps": []
+            }
+          },
+          "pip_311_mypy": {
+            "bzlFile": "@@rules_python~//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "requirement": "mypy==1.8.0",
+              "repo": "pip_311",
+              "repo_prefix": "pip_311_",
+              "whl_patches": {},
+              "experimental_target_platforms": [],
+              "python_interpreter": "",
+              "python_interpreter_target": "@@rules_python~~python~python_3_11_host//:python",
+              "quiet": true,
+              "timeout": 600,
+              "isolated": true,
+              "extra_pip_args": [],
+              "download_only": false,
+              "pip_data_exclude": [],
+              "enable_implicit_namespace_pkgs": false,
+              "environment": {},
+              "envsubst": [],
+              "group_name": "",
+              "group_deps": []
+            }
+          },
+          "pip_311_mypy_extensions": {
+            "bzlFile": "@@rules_python~//python/pip_install:pip_repository.bzl",
+            "ruleClassName": "whl_library",
+            "attributes": {
+              "requirement": "mypy-extensions==1.0.0",
               "repo": "pip_311",
               "repo_prefix": "pip_311_",
               "whl_patches": {},
@@ -2373,7 +2421,7 @@
             "bzlFile": "@@rules_python~//python/pip_install:pip_repository.bzl",
             "ruleClassName": "whl_library",
             "attributes": {
-              "requirement": "typing-extensions==4.10.0",
+              "requirement": "typing-extensions==4.9.0",
               "repo": "pip_311",
               "repo_prefix": "pip_311_",
               "whl_patches": {},
@@ -2412,6 +2460,12 @@
                   "3.11"
                 ],
                 "mccabe": [
+                  "3.11"
+                ],
+                "mypy": [
+                  "3.11"
+                ],
+                "mypy_extensions": [
                   "3.11"
                 ],
                 "packaging": [

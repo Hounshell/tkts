@@ -1,0 +1,15 @@
+load("@rules_python//python:defs.bzl", "py_test")
+load("@pip//:requirements.bzl", "requirement")
+
+py_test(
+    name = "typecheck",
+    main = "typecheck_test.py",
+    srcs = ["typecheck_test.py"],
+    data = [
+        "//python/src:src_files",
+    ],
+    deps = [
+        requirement("mypy"),
+    ],
+)
+
