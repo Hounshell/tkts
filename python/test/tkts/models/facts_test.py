@@ -3,48 +3,53 @@ import pytest
 from tkts.models import facts
 
 
-def test_fact_basics():
-  f = facts.Fact('A')
-  assert f.name == "A"
-  assert f.code_name == "a"
-
-
-def test_base_string_fact_abstract():
+@pytest.mark.parametrize("cls", [
+    facts.Fact,
+    facts.RepeatedFact,
+    facts._StringFactMixin,
+    facts._IntegerFactMixin,
+])
+def test_abstract_classes_are_abstract(cls):
   with pytest.raises(TypeError):
-    f = facts.BaseStringFact('A')
+    f = cls('A')
 
 
-def test_string_fact_basics():
-  f = facts.StringFact('A')
-  assert f.name == "A"
-  assert f.code_name == "a"
-  assert f._convert_to_string_list(7) == ["7"]
+@pytest.mark.parametrize("cls", [
+    facts.StringFact,
+    facts.IntegerFact,
+    facts.RepeatedStringFact,
+    facts.RepeatedIntegerFact,
+])
+def test_fact_basics(cls):
+  fact = cls("A")
+  assert fact.name == "A"
+  assert fact.code_name == "a"
 
 
-def test_repeated_string_fact_basics():
-  f = facts.RepeatedStringFact('A')
-  assert f.name == "A"
-  assert f.code_name == "a"
-  assert f._convert_to_string_list([7, 8]) == ["7", "8"]
+@pytest.mark.parametrize("cls, value", [
+    (facts.StringFact, "Hello world"),
+    (facts.RepeatedStringFact, "a"),
+    (facts.IntegerFact, 7),
+    (facts.RepeatedIntegerFact, 1),
+])
+def test_single_value_roundtrip(cls, value):
+  fact = cls(str(cls))
+  storage = fact.convert_single_value_to_storage(value)
+  result = fact.convert_single_value_from_storage(storage)
+
+  assert value == result
 
 
-def test_base_integer_fact_abstract():
-  with pytest.raises(TypeError):
-    f = facts.BaseIntegerFact('A')
+@pytest.mark.parametrize("cls, value", [
+    (facts.RepeatedStringFact, ["a", "b", "c"]),
+    (facts.RepeatedIntegerFact, [1, 2, 3, 4]),
+])
+def test_multiple_values_roundtrip(cls, value):
+  fact = cls(str(cls))
+  storage = fact.convert_multiple_values_to_storage(value)
+  result = fact.convert_multiple_values_from_storage(storage)
 
-
-def test_integer_fact_basics():
-  f = facts.IntegerFact('A')
-  assert f.name == "A"
-  assert f.code_name == "a"
-  assert f._convert_to_integer_list(7) == [7]
-
-
-def test_repeated_integer_fact_basics():
-  f = facts.RepeatedIntegerFact('A')
-  assert f.name == "A"
-  assert f.code_name == "a"
-  assert f._convert_to_integer_list([7, 8]) == [7, 8]
+  assert value == result
 
 
 if __name__ == "__main__":

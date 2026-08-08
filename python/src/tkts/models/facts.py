@@ -3,15 +3,24 @@ Includes the Fact class and all sub-classes.
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from typing import TypeVar, Generic
 
 
-class Fact(ABC):
-  """Provides information about a field that can be attached to a ticket."""
+# Type hint types.
+V = TypeVar('V')
+STORAGE = tuple[str, None] | tuple[None, int] | tuple[str, int]
 
-  def __init__(self, name: str):
+
+class Fact(ABC, Generic[V]):
+  """Information about a fact field on a ticket."""
+
+  def __init__(
+        self,
+        name: str,
+        code_name: str = None):
     self._name = name
-    self._code_name = name.lower()
+    self._code_name = code_name or name.lower()
+
 
   @property
   def name(self) -> str:
@@ -23,46 +32,59 @@ class Fact(ABC):
     """Gets the code-safe name for this fact."""
     return self._code_name
 
-
-class BaseStringFact(Fact, ABC):
-  """Base class for string-shaped facts."""
+  @abstractmethod
+  def convert_single_value_to_storage(self, value: V) -> STORAGE:
+    """Converts a value for storage as a tuple of string and integer."""
 
   @abstractmethod
-  def _convert_to_string_list(self, value: object) -> list[str]:
-    """Converts the value to a list of strings."""
+  def convert_single_value_from_storage(self, value: STORAGE) -> V:
+    """Converts a value from a tuple of string and integer, from storage."""
 
 
-class StringFact(BaseStringFact):
+class RepeatedFact(Fact[list[V]], Generic[V]):
+  """Fact that stores repeated values."""
+
+  def convert_multiple_values_to_storage(self, values: list[V]) -> list[STORAGE]:
+    """Converts a list of values for storage."""
+    return [self.convert_single_value_to_storage(v) for v in values]
+
+  def convert_multiple_values_from_storage(self, values: list[STORAGE]) -> list[V]:
+    """Converts a list of values from storage."""
+    return [self.convert_single_value_from_storage(v) for v in values]
+
+
+class _StringFactMixin:
+  def convert_single_value_to_storage(self, value: V) -> STORAGE:
+    """Mixin that overrides method in Fact."""
+    return (value, None)
+
+  def convert_single_value_from_storage(self, value: STORAGE) -> V:
+    """Mixin that overrides method in Fact."""
+    return value[0]
+
+
+class StringFact(_StringFactMixin, Fact[str]):
   """Fact that stores a single string value."""
 
-  def _convert_to_string_list(self, value: object) -> list[str]:
-    return [str(value)]
 
-
-class RepeatedStringFact(StringFact):
+class RepeatedStringFact(_StringFactMixin, RepeatedFact[str]):
   """Fact that stores a list of string values."""
 
-  def _convert_to_string_list(self, value: Iterable[object]) -> list[str]:
-    return [str(x) for x in value]
+
+class _IntegerFactMixin:
+  def convert_single_value_to_storage(self, value: V) -> STORAGE:
+    """Mixin that overrides method in Fact."""
+    return (None, value)
+
+  def convert_single_value_from_storage(self, value: STORAGE) -> V:
+    """Mixin that overrides method in Fact."""
+    return value[1]
 
 
-class BaseIntegerFact(Fact, ABC):
-  """Fact that stores an integer value."""
-
-  @abstractmethod
-  def _convert_to_integer_list(self, value: object) -> list[int]:
-    """Converts the value to a list of integers."""
-
-
-class IntegerFact(BaseIntegerFact):
+class IntegerFact(_IntegerFactMixin, Fact[int]):
   """Fact that stores a single integer value."""
 
-  def _convert_to_integer_list(self, value: object) -> list[int]:
-    return [int(value)]
 
-
-class RepeatedIntegerFact(BaseIntegerFact):
+class RepeatedIntegerFact(_IntegerFactMixin, RepeatedFact[int]):
   """Fact that stores a list of string values."""
 
-  def _convert_to_integer_list(self, value: Iterable[object]) -> list[int]:
-    return [int(x) for x in value]

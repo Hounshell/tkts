@@ -67,3 +67,5 @@ ehthumbs.db
 Desktop.ini
 *.swp
 
+# Local-only files
+reports/
