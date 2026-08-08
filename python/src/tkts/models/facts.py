@@ -7,13 +7,11 @@ from typing import TypeVar, Generic
 
 
 # Type hint types.
-_V = TypeVar('_V')
-_SingleT = TypeVar('_SingleT')
-_FinalT = TypeVar('_FinalT')
+T = TypeVar('T')
 _Storage = tuple[str, None] | tuple[None, int] | tuple[str, int]
 
 
-class Fact(ABC, Generic[_SingleT, _FinalT]):
+class Fact(ABC, Generic[T]):
   """Information about a fact field on a ticket."""
 
   def __init__(
@@ -35,22 +33,22 @@ class Fact(ABC, Generic[_SingleT, _FinalT]):
     return self._code_name
 
   @abstractmethod
-  def convert_single_value_to_storage(self, value: _SingleT) -> _Storage:
+  def convert_single_value_to_storage(self, value: T) -> _Storage:
     """Converts a value for storage as a tuple of string and integer."""
 
   @abstractmethod
-  def convert_single_value_from_storage(self, value: _Storage) -> _SingleT:
+  def convert_single_value_from_storage(self, value: _Storage) -> T:
     """Converts a value from a tuple of string and integer, from storage."""
 
 
-class RepeatedFact(Fact[_V, list[_V]], Generic[_V]):
+class RepeatedFact(Fact[T], Generic[T]):
   """Fact that stores repeated values."""
 
-  def convert_multiple_values_to_storage(self, values: list[_V]) -> list[_Storage]:
+  def convert_multiple_values_to_storage(self, values: list[T]) -> list[_Storage]:
     """Converts a list of values for storage."""
     return [self.convert_single_value_to_storage(v) for v in values]
 
-  def convert_multiple_values_from_storage(self, values: list[_Storage]) -> list[_V]:
+  def convert_multiple_values_from_storage(self, values: list[_Storage]) -> list[T]:
     """Converts a list of values from storage."""
     return [self.convert_single_value_from_storage(v) for v in values]
 
@@ -66,7 +64,7 @@ class _StringFactMixin:
     return value[0]
 
 
-class StringFact(_StringFactMixin, Fact[str, str]):
+class StringFact(_StringFactMixin, Fact[str]):
   """Fact that stores a single string value."""
 
 
@@ -85,7 +83,7 @@ class _IntegerFactMixin:
     return value[1]
 
 
-class IntegerFact(_IntegerFactMixin, Fact[int, int]):
+class IntegerFact(_IntegerFactMixin, Fact[int]):
   """Fact that stores a single integer value."""
 
 
