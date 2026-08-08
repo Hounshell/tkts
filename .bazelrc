@@ -2,7 +2,7 @@
 test --test_output=errors
 
 # Print a detailed summary of test outcomes
-test --test_summary=detailed
+test --test_summary=short
 
 # Show colored terminal output
 test --color=yes

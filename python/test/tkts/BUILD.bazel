@@ -1,0 +1,21 @@
+load("@pip//:requirements.bzl", "requirement")
+load("//python/test/tkts:rules.bzl", "generate_py_tests")
+
+
+# Collect source files and test files
+src_files = glob(
+  include = ["**/*.py"],
+  exclude = ["**/*_test.py"],
+)
+
+test_files = glob(["**/*_test.py"])
+
+generate_py_tests(
+  name = 'tkts',
+  src_files = src_files,
+  test_files = test_files,
+  deps = [
+    '//python/src',
+  ],
+)
+
