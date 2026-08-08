@@ -5,3 +5,6 @@ indent-string='  '
 enable=missing-final-newline
 disable=trailing-newlines
 
+[MASTER]
+init-hook='import sys; sys.path.append("python/src")'
+
