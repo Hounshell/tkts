@@ -18,7 +18,7 @@ class Ticket:
   def create(schema: Schema, description: str) -> TicketDelta:
     return TicketDelta(_PRIVATE_TOKEN, Ticket(_PRIVATE_TOKEN, None, schema, []), description)
 
-  def __init__(self, token: object, ticket_id: str | None, schema: Schema, facts: list[tuple(str, _Storage)]):
+  def __init__(self, token: object, ticket_id: str | None, schema: Schema, facts: list[tuple[str, _Storage]]):
     if token is not _PRIVATE_TOKEN:
       raise RuntimeError("Create a new ticket with tkts.Ticket.create() or load one from a tkts.storage.Storage object")
 
