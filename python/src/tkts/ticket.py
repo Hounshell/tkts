@@ -1,14 +1,17 @@
+"""
+Ticket and TicketDelta classes.
+"""
+
 from __future__ import annotations  # Must be line 1
+from typing import TypeVar
 
-"""
-Ticket class.
-"""
-
+from tkts.models.facts import Fact
 from tkts.models.schema import Schema
 
 _PRIVATE_TOKEN = object()
 
 _Storage = tuple[str, None] | tuple[None, int] | tuple[str, int]
+T = TypeVar('T')
 
 
 class Ticket:
@@ -16,11 +19,20 @@ class Ticket:
 
   @staticmethod
   def create(schema: Schema, description: str) -> TicketDelta:
+    """Creates a new Ticket by starting off with a set of changes."""
     return TicketDelta(_PRIVATE_TOKEN, Ticket(_PRIVATE_TOKEN, None, schema, []), description)
 
-  def __init__(self, token: object, ticket_id: str | None, schema: Schema, facts: list[tuple[str, _Storage]]):
+  def __init__(
+      self,
+      token: object,
+      ticket_id: str | None,
+      schema: Schema,
+      facts: list[tuple[str, _Storage]]
+  ):
     if token is not _PRIVATE_TOKEN:
-      raise RuntimeError("Create a new ticket with tkts.Ticket.create() or load one from a tkts.storage.Storage object")
+      raise RuntimeError(
+          "Create a new ticket with tkts.Ticket.create() " +
+          "or load one from a tkts.storage.Storage object")
 
     self.__ticket_id = ticket_id
     self.__schema = schema
@@ -46,10 +58,19 @@ class TicketDelta:
 
   def __init__(self, token: object, ticket: Ticket, description: str):
     if token is not _PRIVATE_TOKEN:
-      raise RuntimeError("Create a new ticket with tkts.Ticket.create() or modify an existing one with tkts.Ticket.update()")
+      raise RuntimeError(
+          "Create a new ticket with tkts.Ticket.create() " +
+          "or modify an existing one with tkts.Ticket.update()")
 
     self.__ticket = ticket
     self.__description = description
 
+  def set_fact(self, fact: Fact[T], value: T) -> TicketDelta:
+    """Sets the fact value on the next write of the ticket."""
+    return self
+
+  def clear_fact(self, fact: Fact[T]) -> TicketDelta:
+    """Clears a fact on the next write of the ticket."""
+    return self
 
 

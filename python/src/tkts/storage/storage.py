@@ -27,7 +27,7 @@ class Storage(ABC):
     """Queries storage for zero or more tickets."""
 
   def _load_ticket(self, ticket_id: str, schema_name: str) -> Ticket:
-    return Ticket(ticket_id, self.__all_schemas[schema_name])
+    return Ticket(ticket_id, None, self.__all_schemas[schema_name], [])
 
 
 class MemoryStorage(Storage):
