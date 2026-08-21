@@ -1,0 +1,16 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["**/*.py"]))
+
+py_binary(
+    name = "demo",
+    main = "tkts_demo.py",
+    srcs = glob(["**/*.py"]),
+    imports = ["."],
+    deps = [
+        '//python/src',
+    ],
+)
+

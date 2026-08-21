@@ -26,6 +26,26 @@ def test_fact_basics(cls):
   assert fact.code_name == "a"
 
 
+@pytest.mark.parametrize("cls", [
+    facts.StringFact,
+    facts.RepeatedStringFact,
+])
+def test_fact_string_validation(cls):
+  fact = cls("A", validation=lambda v: v == "a")
+  assert fact.validate_value("a")
+  assert not fact.validate_value("b")
+
+
+@pytest.mark.parametrize("cls", [
+    facts.IntegerFact,
+    facts.RepeatedIntegerFact,
+])
+def test_fact_integer_validation(cls):
+  fact = cls("A", validation=lambda v: 0 < v < 2)
+  assert fact.validate_value(1)
+  assert not fact.validate_value(3)
+
+
 @pytest.mark.parametrize("cls, value", [
     (facts.StringFact, "Hello world"),
     (facts.RepeatedStringFact, "a"),

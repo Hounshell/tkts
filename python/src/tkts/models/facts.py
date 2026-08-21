@@ -3,6 +3,7 @@ Includes the Fact class and all sub-classes.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from typing import TypeVar, Generic
 
 
@@ -17,9 +18,13 @@ class Fact(ABC, Generic[T]):
   def __init__(
         self,
         name: str,
-        code_name: str | None = None):
+        code_name: str | None = None,
+        required: bool | None = None,
+        validation: Callable[[T], bool] | None = None):
     self._name = name
     self._code_name = code_name or name.lower()
+    self._required = bool(required)
+    self._validation = validation
 
 
   @property
@@ -39,6 +44,10 @@ class Fact(ABC, Generic[T]):
   @abstractmethod
   def convert_single_value_from_storage(self, value: _Storage) -> T:
     """Converts a value from a tuple of string and integer, from storage."""
+
+  def validate_value(self, value: T) -> bool:
+    """Validates that the value is valid."""
+    return not self._validation or self._validation(value)
 
 
 class RepeatedFact(Fact[T], Generic[T]):
